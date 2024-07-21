@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-black
+    }
+
+    body::after {
+        content: '';
+        @apply bg-cover bg-no-repeat w-screen h-screen absolute opacity-50 top-0 left-0 z-[-1];
+
+    }
+}
+
+@layer components {
+    .bg-gray {
+        background-color: rgba(33, 33, 33, 0.6);
+
+    }
+}

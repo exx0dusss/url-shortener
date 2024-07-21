@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{head.title}">TPO 11 - Link Shortener</title>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/styles/tailwind.output.css}">
+    <link rel="icon" th:href="@{/img/favicon.ico}">
+    <style th:inline="css">
+        body::after {
+            background-image: url([[@{/img/background.png}]]);
+        }
+
+        #nav-buttons li a {
+            min-width: 70px;
+        }
+
+        .tip {
+            white-space: pre-line;
+            min-width: 300px;
+        }
+
+        .tip-input:focus + .tip {
+            display: flex;
+        }
+
+    </style>
+</head>
+<body class="font-mono flex flex-col min-h-[100vh]">
+<header class="bg-gray backdrop-blur-3xl border-b border-gray-700 text-xs">
+    <div class="container px-[24px] mx-auto">
+        <div class="h-[60px] flex justify-between items-center text-white">
+            <div class="flex gap-[24px]">
+                <a class="text-xs btn btn-sm btn-outline-light" href="#" th:href="@{/}" th:text="#{header.title}">Link
+                    Shortener (TPO 11)</a>
+                <form id="languageForm" method="get" th:action="@{/locale}">
+                    <label>
+                        <select class="btn text-xs btn-sm btn-outline-light" name="lang"
+                                onchange="document.getElementById('languageForm').submit()">
+                            <option th:selected="${#locale.language == 'en'}" th:text="#{language.english}" value="en">
+                                English
+                            </option>
+                            <option th:selected="${#locale.language == 'de'}" th:text="#{language.german}" value="de">
+                                German
+                            </option>
+                            <option th:selected="${#locale.language == 'pl'}" th:text="#{language.polish}" value="pl">
+                                Polish
+                            </option>
+                        </select>
+                    </label>
+                </form>
+            </div>
+            <ul class="flex gap-[24px]" id="nav-buttons">
+                <li>
+                    <a class="text-xs btn btn-sm btn-success" href="#" th:href="@{/view}" th:text="#{header.nav.view}">View</a>
+                </li>
+                <li>
+                    <a class="text-xs btn btn-sm btn-primary" href="#" th:href="@{/create}"
+                       th:text="#{header.nav.create}">Create</a>
+                </li>
+                <li>
+                    <a class="text-xs btn btn-sm btn-warning" href="#" th:href="@{/edit}" th:text="#{header.nav.edit}">Edit</a>
+                </li>
+                <li>
+                    <a class="text-xs btn btn-sm btn-danger" href="#" th:href="@{/delete}"
+                       th:text="#{header.nav.delete}">Delete</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<main class="flex-grow-1 flex flex-col py-[60px]">
+    <section class="w-full my-auto ">
+        <div class="container flex justify-center items-center px-[24px] mx-auto">
+            <div class="relative gap-[24px] flex flex-col items-center justify-center text-white h-[500px] w-[750px] rounded-[8px] bg-gray backdrop-blur-3xl !border !border-gray-700 p-[60px]">
+                <div class="w-fit absolute h-fit z-10 top-0 left-0">
+                    <div class="flex gap-[10px] p-[24px]">
+                        <button class="!p-0 size-[10px] rounded-full bg-danger"></button>
+                        <button class="!p-0 size-[10px] rounded-full bg-warning"></button>
+                        <button class="!p-0 size-[10px] rounded-full bg-success"></button>
+                    </div>
+                </div>
+                <h1 class="text-3xl" th:text="#{form.title.delete}">Delete an Existing link</h1>
+                <form class="flex flex-col gap-[24px] w-[250px]" method="post" th:action="@{/delete}"
+                      th:object="${link}">
+                    <div class="text-xs relative">
+                        <label class="form-label" for="linkId" th:text="#{form.label.id}">Enter link ID:</label>
+                        <input class="form-control tip-input text-xs" id="linkId"
+                               name="linkId" required th:field="*{id}"
+                               th:placeholder="#{form.placeholder.id}" type="text">
+                        <pre class="hidden tip left-0 bottom-0 translate-x-[-572px] absolute rounded-[8px] bg-[rgba(24,24,24)] border !border-gray-700 text-xs p-[24px]"
+                             th:text="#{form.tip.id}">
+                            - Existing link ID
+                        </pre>
+                    </div>
+                    <div class="text-xs relative">
+                        <label class="form-label" for="password" th:text="#{form.label.password}">Password:</label>
+                        <input class="form-control tip-input text-xs" id="password"
+                               th:field="*{password}" th:placeholder="#{form.placeholder.password}" type="password">
+                        <pre class="hidden tip left-0 bottom-0 translate-x-[-572px] absolute rounded-[8px] bg-[rgba(24,24,24)] border !border-gray-700 text-xs p-[24px]"
+                             th:text="#{form.tip.password.existing}">
+                            - Existing password
+                        </pre>
+                    </div>
+                    <button class="mt-[12px] btn btn-sm btn-primary" th:text="#{form.button.delete}" type="submit">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+<footer class="mt-auto flex bg-gray backdrop-blur-3xl border-t border-gray-700 text-xs">
+    <div class="container px-[24px] mx-auto">
+        <div class="h-[60px] flex justify-end items-center text-white">
+            <a class="text-xs btn btn-sm btn-outline-light" href="#" th:text="#{footer.author}">Developed by s28476</a>
+        </div>
+    </div>
+</footer>
+
+
+<!-- Success Modal -->
+<div aria-hidden="true" aria-labelledby="successModalLabel" class="modal fade" id="successModal"
+     tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered justify-center">
+        <div class="text-white !min-w-[750px] !min-h-[500px] modal-content rounded-[8px] bg-gray backdrop-blur-3xl !border !border-gray-700">
+            <div class="modal-header border-gray-700 !p-[24px] !m-0">
+
+                <button aria-label="Close" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        type="button"></button>
+            </div>
+            <div class="modal-body flex flex-col p-[24px] w-full items-center justify-center">
+                <h5 class="modal-title text-lg text-[var(--bs-success)]" id="successModalLabel"
+                    th:text="#{modal.title.delete.success}">Link deleted Successfully!</h5>
+            </div>
+            <div class="modal-footer border-gray-700 !p-[24px] !m-0"></div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Error Modal -->
+<div aria-hidden="true" aria-labelledby="errorModalLabel" class="modal fade" id="errorModal"
+     tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered justify-center">
+        <div class="text-white !min-w-[750px] !min-h-[500px] modal-content rounded-[8px] bg-gray backdrop-blur-3xl !border !border-gray-700">
+            <div class="modal-header border-gray-700 !p-[24px] !m-0">
+                <h5 class="modal-title text-lg text-[var(--bs-danger)]" id="errorModalLabel"
+                    th:text="#{modal.title.error}">Error Occurred!</h5>
+                <button aria-label="Close" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        type="button"></button>
+            </div>
+            <div class="modal-body flex flex-col p-[24px] w-full">
+                <p class="text-[var(--bs-warning)]" th:text="${error}"></p>
+            </div>
+            <div class="modal-footer border-gray-700 !p-[24px] !m-0"></div>
+        </div>
+    </div>
+</div>
+
+
+<script crossorigin="anonymous" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script th:inline="javascript">
+
+    if ([[${message != null}]]) {
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'), {});
+        successModal.show();
+    } else if ([[${error != null}]]) {
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'), {});
+        errorModal.show();
+    }
+</script>
+
+</body>
+</html>
